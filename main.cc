@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 #include "algorithms/dynamic_programming.h"
 #include "algorithms/automaton.h"
 #include "algorithms/bfs_01.h"
@@ -6,16 +7,22 @@
 
 
 int main(int argc, char** argv) {
-  if (argc != 5) {
-    std::cout << "Usage: sturdy-tester <algorithm> <test> <start> <end>\n";
+  if (argc < 5 || argc > 6) {
+    std::cout << "Usage: sturdy-tester [-t|--time] <algorithm> <test> <start> <end>\n";
     std::cout << "\tOptions for <algorithm> are: 'dp', 'aut', 'bfs01', 'order_deg_bfs'\n";
     std::cout << "\tOptions for <test> are: 'sturdy', 'swm', 'msw', 'mfw'\n";
     return 0;
   }
-  std::string algorithm_choice = std::string(argv[1]);
-  std::string test_choice = std::string(argv[2]);
-  long long int start = std::stoll(argv[3]);
-  long long int end = std::stoll(argv[4]);
+  int index = 1;
+  bool print_timing = false;
+  if (std::string(argv[index]).compare("-t") == 0 || std::string(argv[index]).compare("--time") == 0) {
+    print_timing = true;
+    index++;
+  }
+  std::string algorithm_choice = std::string(argv[index]);
+  std::string test_choice = std::string(argv[index + 1]);
+  long long int start = std::stoll(argv[index + 2]);
+  long long int end = std::stoll(argv[index + 3]);
   Algorithm * algo;
   DynamicProgramming dp;
   Automaton aut;
@@ -33,6 +40,7 @@ int main(int argc, char** argv) {
     std::cout << "Unrecognized algorithm. Choices are: 'dp', 'aut', 'bfs01', 'order_deg_bfs'\n";
     return 0;
   }
+  std::chrono::time_point<std::chrono::high_resolution_clock> start_time = std::chrono::high_resolution_clock::now();
   if (test_choice.compare("sturdy") == 0) {
     for (long long int i = start; i <= end; i++) {
       std::cout << algo->is_sturdy(i) << "\n";
@@ -52,6 +60,11 @@ int main(int argc, char** argv) {
   } else {
     std::cout << "Unrecognized test. Choices are: 'sturdy', 'swm', 'msw', 'mfw'\n";
     return 0;
+  }
+  std::chrono::time_point<std::chrono::high_resolution_clock> end_time = std::chrono::high_resolution_clock::now();
+  std::chrono::microseconds duration = std::chrono::duration_cast<std::chrono::microseconds> (end_time - start_time);
+  if (print_timing) {
+    std::cout << duration.count() << " microseconds\n";
   }
   return 0;
 }
