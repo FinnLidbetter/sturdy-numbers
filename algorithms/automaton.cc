@@ -2,17 +2,23 @@
 
 int Automaton::is_sturdy(long long int value) {
   int num_set_bits = count_set_bits(value);
+  if (num_set_bits <= 2) {
+    return STURDY;
+  }
   int swm = Automaton::swm(value);
   if (num_set_bits == swm) {
-    return 1;
+    return STURDY;
   }
-  return 0;
+  return NOT_STURDY;
 }
 
 int Automaton::swm(long long int value) {
   int num_set_bits = count_set_bits(value);
   if (num_set_bits <= 2) {
     return num_set_bits;
+  }
+  if (baby_step_giant_step(value) > 0) {
+    return 2;
   }
   int lo = 2;
   int hi = num_set_bits - 1;

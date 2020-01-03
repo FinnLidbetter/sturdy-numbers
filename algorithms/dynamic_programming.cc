@@ -3,7 +3,10 @@
 int DynamicProgramming::is_sturdy(long long int value) {
   int num_set_bits = count_set_bits(value);
   if (num_set_bits <= 2) {
-    return 1;
+    return STURDY;
+  }
+  if (baby_step_giant_step(value) > 0) {
+    return NOT_STURDY;
   }
   std::vector<long long int> pow_list = get_powers(value);
   long long int ord = pow_list.size();
@@ -39,17 +42,19 @@ int DynamicProgramming::is_sturdy(long long int value) {
   }
   for (int i = 2; i < num_set_bits; i++) {
     if (reachable[i][0][ord]) {
-      return 0;
+      return NOT_STURDY;
     }
   }
-
-  return 1;
+  return STURDY;
 }
 
 int DynamicProgramming::swm(long long int value) {
   int num_set_bits = count_set_bits(value);
   if (num_set_bits <= 2) {
     return num_set_bits;
+  }
+  if (baby_step_giant_step(value) > 0) {
+    return 2;
   }
   std::vector<long long int> pow_list = get_powers(value);
   long long int ord = pow_list.size();

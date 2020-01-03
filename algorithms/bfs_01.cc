@@ -4,15 +4,18 @@ int Bfs01::is_sturdy(long long int value) {
   int num_set_bits = count_set_bits(value);
   int swm = Bfs01::swm(value);
   if (num_set_bits == swm) {
-    return 1;
+    return STURDY;
   }
-  return 0;
+  return NOT_STURDY;
 }
 
 int Bfs01::swm(long long int value) {
   int num_set_bits = count_set_bits(value);
   if (num_set_bits <= 2) {
     return num_set_bits;
+  }
+  if (baby_step_giant_step(value) > 0) {
+    return 2;
   }
   bool vis[value];
   for (long long int i = 0; i < value; i++) {

@@ -29,6 +29,10 @@ long long int baby_step_giant_step(long long int mod) {
     if (lookup_table.find(required_baby_step) != lookup_table.end()) {
       return giant_step_exp * sqrt_ceil + lookup_table[required_baby_step];
     }
+    curr_giant_step_pow *= giant_step_neg_pow;
+    if (curr_giant_step_pow >= mod) {
+      curr_giant_step_pow %= mod;
+    }
   }
   return -1;
 }

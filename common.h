@@ -17,6 +17,9 @@ class Algorithm {
     virtual mp::mpz_int mfw(long long int value) = 0;
 };
 
+const int STURDY = 1;
+const int NOT_STURDY = 0;
+
 long long int baby_step_giant_step(long long int mod);
 
 int count_set_bits(long long int value);

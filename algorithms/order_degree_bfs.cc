@@ -1,11 +1,12 @@
 #include "order_degree_bfs.h"
 
 int OrderDegreeBfs::is_sturdy(long long int value) {
-  const int NOT_STURDY = 0;
-  const int STURDY = 1;
   int num_set_bits = count_set_bits(value);
   if (num_set_bits <= 2) {
     return STURDY;
+  }
+  if (baby_step_giant_step(value) > 0) {
+    return NOT_STURDY;
   }
   std::vector<long long int> pows_vector = get_powers(value);
   long long int n_pows = pows_vector.size();
@@ -68,6 +69,9 @@ int OrderDegreeBfs::swm(long long int value) {
   int num_set_bits = count_set_bits(value);
   if (num_set_bits <= 2) {
     return num_set_bits;
+  }
+  if (baby_step_giant_step(value) > 0) {
+    return 2;
   }
   std::vector<long long int> pows_vector = get_powers(value);
   long long int n_pows = pows_vector.size();
@@ -221,7 +225,7 @@ mp::mpz_int OrderDegreeBfs::msw(long long int value) {
 }
 
 mp::mpz_int OrderDegreeBfs::mfw(long long int value) {
-  // Not yet implemented!
-  return mp::mpz_int(0);
+  // Not implemented!
+  return mp::mpz_int(-1);
 }
 
