@@ -1,25 +1,35 @@
 #include "automaton.h"
 
-int Automaton::is_sturdy(long long int value) {
-  int num_set_bits = count_set_bits(value);
+// Automaton and binary search implementation of
+// the 4 functions of interest.
+
+int Automaton::is_sturdy(long long int n) {
+  int num_set_bits = count_set_bits(n);
   if (num_set_bits <= 2) {
     return STURDY;
   }
-  int swm = Automaton::swm(value);
+  int swm = Automaton::swm(n);
   if (num_set_bits == swm) {
     return STURDY;
   }
   return NOT_STURDY;
 }
 
-int Automaton::swm(long long int value) {
-  int num_set_bits = count_set_bits(value);
+int Automaton::swm(long long int n) {
+  // Complexity: O(n log(n) log(log(n)))
+  int num_set_bits = count_set_bits(n);
   if (num_set_bits <= 2) {
     return num_set_bits;
   }
-  if (baby_step_giant_step(value) > 0) {
+  if (baby_step_giant_step(n) > 0) {
+    // If there exists x such that 
+    // 2^x mod n = n - 1, then
+    // 2^x + 1 is a multiple of n.
     return 2;
   }
+  // Use a binary search to find the fewest number
+  // of powers of 2 that can be used to represent
+  // a multiple of `n`.
   int lo = 2;
   int hi = num_set_bits - 1;
   int mid, curr_bits;
@@ -27,11 +37,13 @@ int Automaton::swm(long long int value) {
   int best = num_set_bits;
   while (lo <= hi) {
     mid = lo + (hi - lo) / 2;
-    bool vis[mid + 1][value];
+    // Perform a breadth-first-search on the
+    // corresponding product automaton.
+    bool vis[mid + 1][n];
     std::queue<long long int> res_q;
     std::queue<long long int> dig_q;
     for (int i = 0; i <= mid; i++) {
-      for (int j = 0; j < value; j++) {
+      for (int j = 0; j < n; j++) {
         vis[i][j] = false;
       }
     }
@@ -49,8 +61,8 @@ int Automaton::swm(long long int value) {
         break;
       }
       next_res = curr_res * 2;
-      if (next_res >= value) {
-        next_res -= value;
+      if (next_res >= n) {
+        next_res -= n;
       }
       if (!vis[curr_bits][next_res]) {
         res_q.push(next_res);
@@ -58,8 +70,8 @@ int Automaton::swm(long long int value) {
         vis[curr_bits][next_res] = true;
       }
       next_res++;
-      if (next_res >= value) {
-        next_res -= value;
+      if (next_res >= n) {
+        next_res -= n;
       }
       if (curr_bits < mid && !vis[curr_bits + 1][next_res]) {
         res_q.push(next_res);
@@ -77,17 +89,22 @@ int Automaton::swm(long long int value) {
   return best;
 }
 
-mp::mpz_int Automaton::msw(long long int value) {
-  int num_set_bits = count_set_bits(value);
-  int swm = Automaton::swm(value);
+mp::mpz_int Automaton::msw(long long int n) {
+  // Complexity: O(n log(n) log(log(n)))
+  int num_set_bits = count_set_bits(n);
+  // Get the minimum number of powers of 2 needed.
+  int swm = Automaton::swm(n);
   if (num_set_bits == swm) {
     return mp::mpz_int(1);
   }
-  bool vis[swm + 1][value];
-  long long int prev_res[swm + 1][value];
-  int prev_dig[swm + 1][value];
+  // Perform a breadth first search on the corresponding
+  // product automaton, keeping track of the minimum
+  // integer corresponding to each state.
+  bool vis[swm + 1][n];
+  long long int prev_res[swm + 1][n];
+  int prev_dig[swm + 1][n];
   for (int i = 0; i <= swm; i++) {
-    for (int j = 0; j < value; j++) {
+    for (int j = 0; j < n; j++) {
       vis[i][j] = false;
       prev_res[i][j] = -1;
       prev_dig[i][j] = -1;
@@ -111,8 +128,8 @@ mp::mpz_int Automaton::msw(long long int value) {
       break;
     }
     next_res = curr_res * 2;
-    if (next_res >= value) {
-      next_res -= value;
+    if (next_res >= n) {
+      next_res -= n;
     }
     if (!vis[curr_bits][next_res]) {
       res_q.push(next_res);
@@ -122,8 +139,8 @@ mp::mpz_int Automaton::msw(long long int value) {
       prev_res[curr_bits][next_res] = curr_res;
     }
     next_res++;
-    if (next_res >= value) {
-      next_res -= value;
+    if (next_res >= n) {
+      next_res -= n;
     }
     if (curr_bits < swm && !vis[curr_bits + 1][next_res]) {
       res_q.push(next_res);
@@ -133,6 +150,8 @@ mp::mpz_int Automaton::msw(long long int value) {
       prev_res[curr_bits + 1][next_res] = curr_res;
     }
   }
+  // Re-construct the optimal integer using the
+  // ns stored during the breadth first search.
   curr_res = 0;
   curr_bits = swm;
   mp::mpz_int min_product = 0;
@@ -146,19 +165,25 @@ mp::mpz_int Automaton::msw(long long int value) {
       curr_bits--;
     index++;
   } while (curr_res != 0);
-  return min_product / value;
+  return min_product / n;
 }
 
-mp::mpz_int Automaton::mfw(long long int value) {
-  int num_set_bits = count_set_bits(value);
+mp::mpz_int Automaton::mfw(long long int n) {
+  // Complexity: O(n log n)
+  int num_set_bits = count_set_bits(n);
   if (num_set_bits <= 2) {
     return mp::mpz_int(0);
   }
-  bool vis[num_set_bits][value];
-  long long int prev_res[num_set_bits][value];
-  int prev_dig[num_set_bits][value];
+  // Perform a breadth-first-search on the appropriate
+  // product automaton. (The direct product of the automaton
+  // accepting strings with at most (num_set_bits - 1) 1's
+  // and the automaton accepting strings corresponding to
+  // multiples of `n`.
+  bool vis[num_set_bits][n];
+  long long int prev_res[num_set_bits][n];
+  int prev_dig[num_set_bits][n];
   for (int i = 0; i < num_set_bits; i++) {
-    for (int j = 0; j < value; j++) {
+    for (int j = 0; j < n; j++) {
       vis[i][j] = false;
       prev_res[i][j] = -1;
       prev_dig[i][j] = -1;
@@ -179,8 +204,8 @@ mp::mpz_int Automaton::mfw(long long int value) {
     curr_bits = dig_q.front();
     dig_q.pop();
     next_res = curr_res * 2;
-    if (next_res >= value) {
-      next_res -= value;
+    if (next_res >= n) {
+      next_res -= n;
     }
     if (!vis[curr_bits][next_res]) {
       res_q.push(next_res);
@@ -190,8 +215,8 @@ mp::mpz_int Automaton::mfw(long long int value) {
       prev_res[curr_bits][next_res] = curr_res;
     }
     next_res++;
-    if (next_res >= value) {
-      next_res -= value;
+    if (next_res >= n) {
+      next_res -= n;
     }
     if (curr_bits < num_set_bits - 1 && !vis[curr_bits + 1][next_res]) {
       res_q.push(next_res);
@@ -201,6 +226,7 @@ mp::mpz_int Automaton::mfw(long long int value) {
       prev_res[curr_bits + 1][next_res] = curr_res;
     }
   }
+  // Check if n is sturdy, based on the states reached.
   bool found = false;
   for (int i = 2; i < num_set_bits; i++) {
     if (vis[i][0]) {
@@ -210,8 +236,10 @@ mp::mpz_int Automaton::mfw(long long int value) {
   if (!found) {
     return mp::mpz_int(0);
   }
+  // Re-construct the smallest multiple of n for each
+  // number of 1's for which an accepting state is reached.
   const mp::mpz_int ONE = 1;
-  const mp::mpz_int INF = ONE << value;
+  const mp::mpz_int INF = ONE << n;
   mp::mpz_int mfw = INF;
   for (int i = 2; i < num_set_bits; i++) {
     if (vis[i][0]) {

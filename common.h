@@ -11,19 +11,19 @@ namespace mp = boost::multiprecision;
 
 class Algorithm {
   public:
-    virtual int is_sturdy(long long int value) = 0;
-    virtual int swm(long long int value) = 0;
-    virtual mp::mpz_int msw(long long int value) = 0;
-    virtual mp::mpz_int mfw(long long int value) = 0;
+    virtual int is_sturdy(long long int n) = 0;
+    virtual int swm(long long int n) = 0;
+    virtual mp::mpz_int msw(long long int n) = 0;
+    virtual mp::mpz_int mfw(long long int n) = 0;
 };
 
 const int STURDY = 1;
 const int NOT_STURDY = 0;
 
-long long int baby_step_giant_step(long long int mod);
+long long int baby_step_giant_step(long long int n);
 
-int count_set_bits(long long int value);
+int count_set_bits(long long int n);
 
-std::vector<long long int> get_powers(long long int value);
+std::vector<long long int> get_powers(long long int n);
 
 #endif /* COMMON_H definition */

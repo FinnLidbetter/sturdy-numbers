@@ -1,24 +1,24 @@
 #include "bfs_01.h"
 
-int Bfs01::is_sturdy(long long int value) {
-  int num_set_bits = count_set_bits(value);
-  int swm = Bfs01::swm(value);
+int Bfs01::is_sturdy(long long int n) {
+  int num_set_bits = count_set_bits(n);
+  int swm = Bfs01::swm(n);
   if (num_set_bits == swm) {
     return STURDY;
   }
   return NOT_STURDY;
 }
 
-int Bfs01::swm(long long int value) {
-  int num_set_bits = count_set_bits(value);
+int Bfs01::swm(long long int n) {
+  int num_set_bits = count_set_bits(n);
   if (num_set_bits <= 2) {
     return num_set_bits;
   }
-  if (baby_step_giant_step(value) > 0) {
+  if (baby_step_giant_step(n) > 0) {
     return 2;
   }
-  bool vis[value];
-  for (long long int i = 0; i < value; i++) {
+  bool vis[n];
+  for (long long int i = 0; i < n; i++) {
     vis[i] = false;
   }
   std::deque<long long int> q;
@@ -43,32 +43,32 @@ int Bfs01::swm(long long int value) {
       return depth;
     }
     next_res = curr_res * 2;
-    if (next_res >= value) {
-      next_res -= value;
+    if (next_res >= n) {
+      next_res -= n;
     }
     q.push_front(next_res);
     next_res++;
-    if (next_res >= value) {
-      next_res -= value;
+    if (next_res >= n) {
+      next_res -= n;
     }
     q.push_back(next_res);
   }
   return num_set_bits;
 }
 
-mp::mpz_int Bfs01::msw(long long int value) {
+mp::mpz_int Bfs01::msw(long long int n) {
   // With the exception of the function used to calculate
   // swm, this function is identical to that of Automaton::msw
-  int num_set_bits = count_set_bits(value);
-  int swm = Bfs01::swm(value);
+  int num_set_bits = count_set_bits(n);
+  int swm = Bfs01::swm(n);
   if (num_set_bits == swm) {
     return mp::mpz_int(1);
   }
-  bool vis[swm + 1][value];
-  long long int prev_res[swm + 1][value];
-  int prev_dig[swm + 1][value];
+  bool vis[swm + 1][n];
+  long long int prev_res[swm + 1][n];
+  int prev_dig[swm + 1][n];
   for (int i = 0; i <= swm; i++) {
-    for (int j = 0; j < value; j++) {
+    for (int j = 0; j < n; j++) {
       vis[i][j] = false;
       prev_res[i][j] = -1;
       prev_dig[i][j] = -1;
@@ -92,8 +92,8 @@ mp::mpz_int Bfs01::msw(long long int value) {
       break;
     }
     next_res = curr_res * 2;
-    if (next_res >= value) {
-      next_res -= value;
+    if (next_res >= n) {
+      next_res -= n;
     }
     if (!vis[curr_bits][next_res]) {
       res_q.push(next_res);
@@ -103,8 +103,8 @@ mp::mpz_int Bfs01::msw(long long int value) {
       prev_res[curr_bits][next_res] = curr_res;
     }
     next_res++;
-    if (next_res >= value) {
-      next_res -= value;
+    if (next_res >= n) {
+      next_res -= n;
     }
     if (curr_bits < swm && !vis[curr_bits + 1][next_res]) {
       res_q.push(next_res);
@@ -127,21 +127,21 @@ mp::mpz_int Bfs01::msw(long long int value) {
       curr_bits--;
     index++;
   } while (curr_res != 0);
-  return min_product / value;
+  return min_product / n;
 }
 
-mp::mpz_int Bfs01::mfw(long long int value) {
+mp::mpz_int Bfs01::mfw(long long int n) {
   // This implementation is identical to that of
   // Automaton::mfw.
-  int num_set_bits = count_set_bits(value);
+  int num_set_bits = count_set_bits(n);
   if (num_set_bits <= 2) {
     return mp::mpz_int(0);
   }
-  bool vis[num_set_bits][value];
-  long long int prev_res[num_set_bits][value];
-  int prev_dig[num_set_bits][value];
+  bool vis[num_set_bits][n];
+  long long int prev_res[num_set_bits][n];
+  int prev_dig[num_set_bits][n];
   for (int i = 0; i < num_set_bits; i++) {
-    for (int j = 0; j < value; j++) {
+    for (int j = 0; j < n; j++) {
       vis[i][j] = false;
       prev_res[i][j] = -1;
       prev_dig[i][j] = -1;
@@ -162,8 +162,8 @@ mp::mpz_int Bfs01::mfw(long long int value) {
     curr_bits = dig_q.front();
     dig_q.pop();
     next_res = curr_res * 2;
-    if (next_res >= value) {
-      next_res -= value;
+    if (next_res >= n) {
+      next_res -= n;
     }
     if (!vis[curr_bits][next_res]) {
       res_q.push(next_res);
@@ -173,8 +173,8 @@ mp::mpz_int Bfs01::mfw(long long int value) {
       prev_res[curr_bits][next_res] = curr_res;
     }
     next_res++;
-    if (next_res >= value) {
-      next_res -= value;
+    if (next_res >= n) {
+      next_res -= n;
     }
     if (curr_bits < num_set_bits - 1 && !vis[curr_bits + 1][next_res]) {
       res_q.push(next_res);
@@ -194,7 +194,7 @@ mp::mpz_int Bfs01::mfw(long long int value) {
     return mp::mpz_int(0);
   }
   const mp::mpz_int ONE = 1;
-  const mp::mpz_int INF = ONE << value;
+  const mp::mpz_int INF = ONE << n;
   mp::mpz_int mfw = INF;
   for (int i = 2; i < num_set_bits; i++) {
     if (vis[i][0]) {

@@ -1,14 +1,14 @@
 #include "order_degree_bfs.h"
 
-int OrderDegreeBfs::is_sturdy(long long int value) {
-  int num_set_bits = count_set_bits(value);
+int OrderDegreeBfs::is_sturdy(long long int n) {
+  int num_set_bits = count_set_bits(n);
   if (num_set_bits <= 2) {
     return STURDY;
   }
-  if (baby_step_giant_step(value) > 0) {
+  if (baby_step_giant_step(n) > 0) {
     return NOT_STURDY;
   }
-  std::vector<long long int> pows_vector = get_powers(value);
+  std::vector<long long int> pows_vector = get_powers(n);
   long long int n_pows = pows_vector.size();
   long long int pows[n_pows];
   for (long long int i = 0; i < n_pows; i++) {
@@ -17,11 +17,11 @@ int OrderDegreeBfs::is_sturdy(long long int value) {
   
   int depth = 0;
   std::queue<long long int> q;
-  int dist[value];
-  for (int i = 0; i < value; i++) {
+  int dist[n];
+  for (int i = 0; i < n; i++) {
     dist[i] = -1;
   }
-  // Use -1 as a special value that will be treated like 0,
+  // Use -1 as a special n that will be treated like 0,
   // but will not trigger the break condition immediately.
   const long long int INITIAL_ZERO = -1;
   q.push(INITIAL_ZERO);
@@ -45,15 +45,15 @@ int OrderDegreeBfs::is_sturdy(long long int value) {
     }
     for (long long int index = 0; index < n_pows; index++) {
       next_res = curr_res + pows[index];
-      if (next_res >= value) {
-        next_res -= value;
+      if (next_res >= n) {
+        next_res -= n;
       }
       if (dist[next_res] == -1) {
         dist[next_res] = depth + 1;
-        if (next_res != 0 && dist[value - next_res] != -1 && dist[value - next_res] + dist[next_res] < num_set_bits) {
+        if (next_res != 0 && dist[n - next_res] != -1 && dist[n - next_res] + dist[next_res] < num_set_bits) {
           return NOT_STURDY;
         }
-        if (curr_res == 0 || next_res == 0 || dist[value - next_res] == -1 || dist[value - next_res] + dist[next_res] < num_set_bits) {
+        if (curr_res == 0 || next_res == 0 || dist[n - next_res] == -1 || dist[n - next_res] + dist[next_res] < num_set_bits) {
           // Only keep searching this path if it is not known
           // to be impossible to reach 0 residue at a depth
           // less than num_set_bits.
@@ -65,15 +65,15 @@ int OrderDegreeBfs::is_sturdy(long long int value) {
   return STURDY;
 }
 
-int OrderDegreeBfs::swm(long long int value) {
-  int num_set_bits = count_set_bits(value);
+int OrderDegreeBfs::swm(long long int n) {
+  int num_set_bits = count_set_bits(n);
   if (num_set_bits <= 2) {
     return num_set_bits;
   }
-  if (baby_step_giant_step(value) > 0) {
+  if (baby_step_giant_step(n) > 0) {
     return 2;
   }
-  std::vector<long long int> pows_vector = get_powers(value);
+  std::vector<long long int> pows_vector = get_powers(n);
   long long int n_pows = pows_vector.size();
   long long int pows[n_pows];
   for (long long int i = 0; i < n_pows; i++) {
@@ -82,11 +82,11 @@ int OrderDegreeBfs::swm(long long int value) {
   
   int depth = 0;
   std::queue<long long int> q;
-  int dist[value];
-  for (int i = 0; i < value; i++) {
+  int dist[n];
+  for (int i = 0; i < n; i++) {
     dist[i] = -1;
   }
-  // Use -1 as a special value that will be treated like 0,
+  // Use -1 as a special n that will be treated like 0,
   // but will not trigger the break condition immediately.
   const long long int INITIAL_ZERO = -1;
   q.push(INITIAL_ZERO);
@@ -110,12 +110,12 @@ int OrderDegreeBfs::swm(long long int value) {
     }
     for (long long int index = 0; index < n_pows; index++) {
       next_res = curr_res + pows[index];
-      if (next_res >= value) {
-        next_res -= value;
+      if (next_res >= n) {
+        next_res -= n;
       }
       if (dist[next_res] == -1) {
         dist[next_res] = depth + 1;
-        if (curr_res == 0 || next_res == 0 || dist[value - next_res] == -1 || dist[value - next_res] + dist[next_res] < num_set_bits) {
+        if (curr_res == 0 || next_res == 0 || dist[n - next_res] == -1 || dist[n - next_res] + dist[next_res] < num_set_bits) {
           // Only keep searching this path if it is not known
           // to be impossible to reach 0 residue at a depth
           // less than num_set_bits.
@@ -127,12 +127,12 @@ int OrderDegreeBfs::swm(long long int value) {
   return num_set_bits;
  }
 
-mp::mpz_int OrderDegreeBfs::msw(long long int value) {
-  int num_set_bits = count_set_bits(value);
+mp::mpz_int OrderDegreeBfs::msw(long long int n) {
+  int num_set_bits = count_set_bits(n);
   if (num_set_bits <= 2) {
     return mp::mpz_int(1);
   }
-  std::vector<long long int> pows_vector = get_powers(value);
+  std::vector<long long int> pows_vector = get_powers(n);
   long long int n_pows = pows_vector.size();
   long long int pows[n_pows];
   for (long long int i = 0; i < n_pows; i++) {
@@ -141,15 +141,15 @@ mp::mpz_int OrderDegreeBfs::msw(long long int value) {
   
   int depth = 0;
   std::queue<long long int> q;
-  int dist[value];
-  long long int max_bit[value];
-  long long int add_index[value];
-  for (int i = 0; i < value; i++) {
+  int dist[n];
+  long long int max_bit[n];
+  long long int add_index[n];
+  for (int i = 0; i < n; i++) {
     dist[i] = -1;
     max_bit[i] = -1;
     add_index[i] = -1;
   }
-  // Use -1 as a special value that will be treated like 0,
+  // Use -1 as a special n that will be treated like 0,
   // but will not trigger the break condition immediately.
   const long long int INITIAL_ZERO = -1;
   q.push(INITIAL_ZERO);
@@ -173,12 +173,12 @@ mp::mpz_int OrderDegreeBfs::msw(long long int value) {
     }
     for (long long int index = 0; index < n_pows; index++) {
       next_res = curr_res + pows[index];
-      if (next_res >= value) {
-        next_res -= value;
+      if (next_res >= n) {
+        next_res -= n;
       }
       if (dist[next_res] == -1) {
         // First time visiting next_res at this depth.
-        // Set initial values for dist, add_index, and max_bit.
+        // Set initial ns for dist, add_index, and max_bit.
         dist[next_res] = depth + 1;
         add_index[next_res] = index;
         if (max_bit[curr_res] > index) {
@@ -192,7 +192,7 @@ mp::mpz_int OrderDegreeBfs::msw(long long int value) {
       } else if (dist[next_res] == depth + 1) {
         long long int other_res = next_res - pows[add_index[next_res]];
         if (other_res < 0) {
-          other_res += value;
+          other_res += n;
         }
         if ((index < max_bit[next_res] && max_bit[curr_res] < max_bit[next_res]) || (index == max_bit[next_res] && max_bit[curr_res] <= max_bit[next_res] && max_bit[curr_res] < max_bit[other_res])) {
           add_index[next_res] = index;
@@ -206,7 +206,7 @@ mp::mpz_int OrderDegreeBfs::msw(long long int value) {
     }
   }
   if (dist[0] == -1) {
-    // value is sturdy.
+    // n is sturdy.
     return mp::mpz_int(1);
   }
 
@@ -217,14 +217,14 @@ mp::mpz_int OrderDegreeBfs::msw(long long int value) {
     product |= ONE << add_index[curr_res];
     next_res = curr_res - pows[add_index[curr_res]];
     if (next_res < 0) {
-      next_res += value;
+      next_res += n;
     }
     curr_res = next_res;
   } while (curr_res != 0);
-  return product / value;
+  return product / n;
 }
 
-mp::mpz_int OrderDegreeBfs::mfw(long long int value) {
+mp::mpz_int OrderDegreeBfs::mfw(long long int n) {
   // Not implemented!
   return mp::mpz_int(-1);
 }

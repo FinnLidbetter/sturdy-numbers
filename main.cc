@@ -42,20 +42,20 @@ int main(int argc, char** argv) {
   }
   std::chrono::time_point<std::chrono::high_resolution_clock> start_time = std::chrono::high_resolution_clock::now();
   if (test_choice.compare("sturdy") == 0) {
-    for (long long int i = start; i <= end; i++) {
-      std::cout << algo->is_sturdy(i) << "\n";
+    for (long long int n = start; n <= end; n++) {
+      std::cout << algo->is_sturdy(n) << "\n";
     }
   } else if (test_choice.compare("swm") == 0) {
-    for (long long int i = start; i <= end; i++) {
-      std::cout << algo->swm(i) << "\n";
+    for (long long int n = start; n <= end; n++) {
+      std::cout << algo->swm(n) << "\n";
     }
   } else if (test_choice.compare("msw") == 0) {
-    for (long long int i = start; i <= end; i++) {
-      std::cout << algo->msw(i) << "\n";
+    for (long long int n = start; n <= end; n++) {
+      std::cout << algo->msw(n) << "\n";
     }
   } else if (test_choice.compare("mfw") == 0) {
-    for (long long int i = start; i <= end; i++) {
-      std::cout << algo->mfw(i) << "\n";
+    for (long long int n = start; n <= end; n++) {
+      std::cout << algo->mfw(n) << "\n";
     }
   } else {
     std::cout << "Unrecognized test. Choices are: 'sturdy', 'swm', 'msw', 'mfw'\n";

@@ -1,18 +1,18 @@
 #include "common.h"
 
-long long int baby_step_giant_step(long long int mod) {
-  long long int target = mod - 1;
-  if (mod % 2 == 0) {
+long long int baby_step_giant_step(long long int n) {
+  long long int target = n - 1;
+  if (n % 2 == 0) {
     return -1;
   }
-  long long int sqrt_ceil = static_cast<long long int>(std::ceil(std::sqrt(mod)));
+  long long int sqrt_ceil = static_cast<long long int>(std::ceil(std::sqrt(n)));
   long long int pow = 1;
   std::unordered_map<long long int, long long int> lookup_table = std::unordered_map<long long int, long long int>();
   for (long long int exp = 0; exp < sqrt_ceil; exp++) {
     lookup_table[pow] = exp;
     pow *= 2;
-    if (pow >= mod) {
-      pow %= mod;
+    if (pow >= n) {
+      pow %= n;
     }
   }
   long long int giant_step_neg_pow = 1;
@@ -20,26 +20,26 @@ long long int baby_step_giant_step(long long int mod) {
     if (giant_step_neg_pow % 2 == 0) {
       giant_step_neg_pow /= 2;
     } else {
-      giant_step_neg_pow = (giant_step_neg_pow + mod) / 2;
+      giant_step_neg_pow = (giant_step_neg_pow + n) / 2;
     }
   }
   long long int curr_giant_step_pow = 1;
   for (long long int giant_step_exp = 0; giant_step_exp < sqrt_ceil; giant_step_exp++) {
-    long long int required_baby_step = (curr_giant_step_pow * target) % mod;
+    long long int required_baby_step = (curr_giant_step_pow * target) % n;
     if (lookup_table.find(required_baby_step) != lookup_table.end()) {
       return giant_step_exp * sqrt_ceil + lookup_table[required_baby_step];
     }
     curr_giant_step_pow *= giant_step_neg_pow;
-    if (curr_giant_step_pow >= mod) {
-      curr_giant_step_pow %= mod;
+    if (curr_giant_step_pow >= n) {
+      curr_giant_step_pow %= n;
     }
   }
   return -1;
 }
 
-int count_set_bits(long long int value) {
-  // Return the number of set bits in `value`.
-  long long int copy = value;
+int count_set_bits(long long int n) {
+  // Return the number of set bits in n.
+  long long int copy = n;
   int num_set_bits = 0;
   while (copy > 0) {
     if ((copy & 1) > 0) {
@@ -50,8 +50,8 @@ int count_set_bits(long long int value) {
   return num_set_bits;
 }
 
-std::vector<long long int> get_powers(long long int value) {
-  // Get a list of the powers of 2 modulo `value`.
+std::vector<long long int> get_powers(long long int n) {
+  // Get a list of the powers of 2 nulo n.
   std::unordered_set<long long int> pow_set;
   std::vector<long long int> pow_list;
   long long int pow = 1;
@@ -59,8 +59,8 @@ std::vector<long long int> get_powers(long long int value) {
     pow_set.insert(pow);
     pow_list.push_back(pow);
     pow <<= 1;
-    if (pow >= value)
-      pow -= value;
+    if (pow >= n)
+      pow -= n;
   }
   return pow_list;
 }
