@@ -1,11 +1,7 @@
 # sturdy-numbers
 Command line interface for timing algorithms related to sums of digits of multiples of natural numbers.
 
-
 ## How to work with GitHub -- branching, making changes, pull requests, issues, etc.
-
-Since there will be multiple people working on multiple files, a few guidelines
-should help keep things running smoothly.
 
 First, here is GitHub's description of this workflow model:
 https://help.github.com/categories/collaborating-with-issues-and-pull-requests/

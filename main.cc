@@ -4,26 +4,6 @@
 #include "algorithms/bfs_01.h"
 #include "algorithms/order_degree_bfs.h"
 
-template <class AlgorithmClass>
-int is_sturdy(long long int value) {
-  return AlgorithmClass::is_sturdy(value);
-}
-
-template <class AlgorithmClass>
-int swm(long long int value) {
-  return AlgorithmClass::swm(value);
-}
-
-template <class Algorithm>
-mp::mpz_int msw(long long int value) {
-  return AlgorithmClass::msw(value);
-}
-
-template <class Algorithm>
-mp::mpz_int mfw(long long int value) {
-  return AlgorithmClass::mfw(value);
-}
-
 
 int main(int argc, char** argv) {
   if (argc != 5) {
@@ -36,67 +16,42 @@ int main(int argc, char** argv) {
   std::string test_choice = std::string(argv[2]);
   long long int start = std::stoll(argv[3]);
   long long int end = std::stoll(argv[4]);
-  Algorithm algo;
-
-  long long int n;
-  bool dp_is_sturdy_bool;
-  int dp_swm_val;
-  mp::mpz_int dp_msw_val;
-  mp::mpz_int dp_mfw_val;
-  std::cin >> n;
-  std::cout << "DynamicProgramming:\n";
-  dp_is_sturdy_bool = DynamicProgramming::is_sturdy(n) == 1;
-  std::cout << (dp_is_sturdy_bool ? "\tsturdy\n" : "\tnot sturdy\n");
-  dp_swm_val = DynamicProgramming::swm(n);
-  std::cout << "\tswm(" << n << ") = " << dp_swm_val << "\n";
-  dp_msw_val = DynamicProgramming::msw(n);
-  std::cout << "\tmsw(" << n << ") = " << dp_msw_val << "\n";
-  std::cout << "\tmsw(" << n << ") * " << n << " = " << dp_msw_val * n << "\n";
-  dp_mfw_val = DynamicProgramming::mfw(n);
-  std::cout << "\tmfw(" << n << ") = " << dp_mfw_val << "\n";
-
-  bool aut_is_sturdy_bool;
-  int aut_swm_val;
-  mp::mpz_int aut_msw_val;
-  mp::mpz_int aut_mfw_val;
-  std::cout << "Automaton:\n";
-  aut_is_sturdy_bool = Automaton::is_sturdy(n) == 1;
-  std::cout << (aut_is_sturdy_bool ? "\tsturdy\n" : "\tnot sturdy\n");
-  aut_swm_val = Automaton::swm(n);
-  std::cout << "\tswm(" << n << ") = " << aut_swm_val << "\n";
-  aut_msw_val = Automaton::msw(n);
-  std::cout << "\tmsw(" << n << ") = " << aut_msw_val << "\n";
-  std::cout << "\tmsw(" << n << ") * " << n << " = " << aut_msw_val * n << "\n";
-  aut_mfw_val = Automaton::mfw(n);
-  std::cout << "\tmfw(" << n << ") = " << aut_mfw_val << "\n"; 
-
-  bool bfs_01_is_sturdy_bool;
-  int bfs_01_swm_val;
-  mp::mpz_int bfs_01_msw_val;
-  mp::mpz_int bfs_01_mfw_val;
-  std::cout << "Bfs01:\n";
-  bfs_01_is_sturdy_bool = Bfs01::is_sturdy(n) == 1;
-  std::cout << (bfs_01_is_sturdy_bool ? "\tsturdy\n" : "\tnot sturdy\n");
-  bfs_01_swm_val = Bfs01::swm(n);
-  std::cout << "\tswm(" << n << ") = " << bfs_01_swm_val << "\n";
-  bfs_01_msw_val = Bfs01::msw(n);
-  std::cout << "\tmsw(" << n << ") = " << bfs_01_msw_val << "\n";
-  std::cout << "\tmsw(" << n << ") * " << n << " = " << bfs_01_msw_val * n << "\n";
-  bfs_01_mfw_val = Bfs01::mfw(n);
-  std::cout << "\tmfw(" << n << ") = " << bfs_01_mfw_val << "\n"; 
-
-  bool order_degree_bfs_is_sturdy_bool;
-  int order_degree_bfs_swm_val;
-  mp::mpz_int order_degree_bfs_msw_val;
-  mp::mpz_int order_degree_bfs_mfw_val;
-  std::cout << "OrderDegreeBfs:\n";
-  order_degree_bfs_is_sturdy_bool = OrderDegreeBfs::is_sturdy(n) == 1;
-  std::cout << (order_degree_bfs_is_sturdy_bool ? "\tsturdy\n" : "\tnot sturdy\n");
-  order_degree_bfs_swm_val = OrderDegreeBfs::swm(n);
-  std::cout << "\tswm(" << n << ") = " << order_degree_bfs_swm_val << "\n";
-  order_degree_bfs_msw_val = OrderDegreeBfs::msw(n);
-  std::cout << "\tmsw(" << n << ") = " << order_degree_bfs_msw_val << "\n";
-  std::cout << "\tmsw(" << n << ") * " << n << " = " << order_degree_bfs_msw_val * n << "\n";
-
+  Algorithm * algo;
+  DynamicProgramming dp;
+  Automaton aut;
+  Bfs01 bfs01;
+  OrderDegreeBfs order_deg_bfs;
+  if (algorithm_choice.compare("dp") == 0) {
+    algo = &dp;
+  } else if (algorithm_choice.compare("aut") == 0) {
+    algo = &aut;
+  } else if (algorithm_choice.compare("bfs01") == 0) {
+    algo = &bfs01;
+  } else if (algorithm_choice.compare("order_deg_bfs") == 0) {
+    algo = &order_deg_bfs;
+  } else {
+    std::cout << "Unrecognized algorithm. Choices are: 'dp', 'aut', 'bfs01', 'order_deg_bfs'\n";
+    return 0;
+  }
+  if (test_choice.compare("sturdy") == 0) {
+    for (long long int i = start; i <= end; i++) {
+      std::cout << algo->is_sturdy(i) << "\n";
+    }
+  } else if (test_choice.compare("swm") == 0) {
+    for (long long int i = start; i <= end; i++) {
+      std::cout << algo->swm(i) << "\n";
+    }
+  } else if (test_choice.compare("msw") == 0) {
+    for (long long int i = start; i <= end; i++) {
+      std::cout << algo->msw(i) << "\n";
+    }
+  } else if (test_choice.compare("mfw") == 0) {
+    for (long long int i = start; i <= end; i++) {
+      std::cout << algo->mfw(i) << "\n";
+    }
+  } else {
+    std::cout << "Unrecognized test. Choices are: 'sturdy', 'swm', 'msw', 'mfw'\n";
+    return 0;
+  }
   return 0;
 }

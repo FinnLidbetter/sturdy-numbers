@@ -190,9 +190,9 @@ mp::mpz_int OrderDegreeBfs::msw(long long int value) {
         if (other_res < 0) {
           other_res += value;
         }
-        if ((index < max_bit[next_res] && max_bit[curr_res] < max_bit[next_res]) || (index == max_bit[next_res] && max_bit[curr_res] < max_bit[other_res])) {
+        if ((index < max_bit[next_res] && max_bit[curr_res] < max_bit[next_res]) || (index == max_bit[next_res] && max_bit[curr_res] <= max_bit[next_res] && max_bit[curr_res] < max_bit[other_res])) {
           add_index[next_res] = index;
-          if (max_bit[curr_res] < max_bit[other_res]) {
+          if (max_bit[curr_res] > index) {
             max_bit[next_res] = max_bit[curr_res];
           } else {
             max_bit[next_res] = index;

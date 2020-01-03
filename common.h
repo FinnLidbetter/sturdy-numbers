@@ -11,20 +11,10 @@ namespace mp = boost::multiprecision;
 
 class Algorithm {
   public:
-    static int is_sturdy(long long int value);
-    static int swm(long long int value);
-    static int msw(long long int value);
-    static int mfw(long long int value);
-
-    static int * is_sturdy_range(long long int value_min, long long int value_max);
-    static int * swm_range(long long int value_min, long long int value_max);
-    static int * msw_range(long long int value_min, long long int value_max);
-    static int * mfw_range(long long int value_min, long long int value_max);
-
-
-  private:
-    static int * test_range(long long int value_min, long long int value_max, int (*func)(long long int));
-
+    virtual int is_sturdy(long long int value) = 0;
+    virtual int swm(long long int value) = 0;
+    virtual mp::mpz_int msw(long long int value) = 0;
+    virtual mp::mpz_int mfw(long long int value) = 0;
 };
 
 long long int baby_step_giant_step(long long int mod);

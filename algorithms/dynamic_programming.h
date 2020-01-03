@@ -3,12 +3,12 @@
 
 #include "../common.h"
 
-class DynamicProgramming : protected Algorithm {
+class DynamicProgramming : public Algorithm {
   public:
-    static int is_sturdy(long long int value);
-    static int swm(long long int value);
-    static mp::mpz_int msw(long long int value);
-    static mp::mpz_int mfw(long long int value);
+    int is_sturdy(long long int value);
+    int swm(long long int value);
+    mp::mpz_int msw(long long int value);
+    mp::mpz_int mfw(long long int value);
   private:
     static void fill_tables(bool ***reachable,
                             mp::mpz_int ***min_valid,
