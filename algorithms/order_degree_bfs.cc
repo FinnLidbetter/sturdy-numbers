@@ -1,6 +1,7 @@
 #include "order_degree_bfs.h"
 
 int OrderDegreeBfs::is_sturdy(long long int n) {
+  // Complexity O(n^2)
   int num_set_bits = count_set_bits(n);
   if (num_set_bits <= 2) {
     return STURDY;
@@ -66,6 +67,7 @@ int OrderDegreeBfs::is_sturdy(long long int n) {
 }
 
 int OrderDegreeBfs::swm(long long int n) {
+  // Complexity: O(n^2) 
   int num_set_bits = count_set_bits(n);
   if (num_set_bits <= 2) {
     return num_set_bits;
@@ -128,6 +130,7 @@ int OrderDegreeBfs::swm(long long int n) {
  }
 
 mp::mpz_int OrderDegreeBfs::msw(long long int n) {
+  // Complexity O(n^2)
   int num_set_bits = count_set_bits(n);
   if (num_set_bits <= 2) {
     return mp::mpz_int(1);
@@ -178,7 +181,7 @@ mp::mpz_int OrderDegreeBfs::msw(long long int n) {
       }
       if (dist[next_res] == -1) {
         // First time visiting next_res at this depth.
-        // Set initial ns for dist, add_index, and max_bit.
+        // Set initial values for dist, add_index, and max_bit.
         dist[next_res] = depth + 1;
         add_index[next_res] = index;
         if (max_bit[curr_res] > index) {

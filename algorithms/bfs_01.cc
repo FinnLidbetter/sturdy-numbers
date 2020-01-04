@@ -1,6 +1,7 @@
 #include "bfs_01.h"
 
 int Bfs01::is_sturdy(long long int n) {
+  // Complexity: O(n)
   int num_set_bits = count_set_bits(n);
   int swm = Bfs01::swm(n);
   if (num_set_bits == swm) {
@@ -10,6 +11,7 @@ int Bfs01::is_sturdy(long long int n) {
 }
 
 int Bfs01::swm(long long int n) {
+  // Complexity: O(n)
   int num_set_bits = count_set_bits(n);
   if (num_set_bits <= 2) {
     return num_set_bits;
@@ -57,6 +59,7 @@ int Bfs01::swm(long long int n) {
 }
 
 mp::mpz_int Bfs01::msw(long long int n) {
+  // Complexity: O(n log(n))
   // With the exception of the function used to calculate
   // swm, this function is identical to that of Automaton::msw
   int num_set_bits = count_set_bits(n);
@@ -131,6 +134,7 @@ mp::mpz_int Bfs01::msw(long long int n) {
 }
 
 mp::mpz_int Bfs01::mfw(long long int n) {
+  // Complexity: O(n log n)
   // This implementation is identical to that of
   // Automaton::mfw.
   int num_set_bits = count_set_bits(n);

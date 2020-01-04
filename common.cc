@@ -1,13 +1,14 @@
 #include "common.h"
 
 long long int baby_step_giant_step(long long int n) {
+  // Complexity: O(sqrt(n)log(n))
   long long int target = n - 1;
   if (n % 2 == 0) {
     return -1;
   }
   long long int sqrt_ceil = static_cast<long long int>(std::ceil(std::sqrt(n)));
   long long int pow = 1;
-  std::unordered_map<long long int, long long int> lookup_table = std::unordered_map<long long int, long long int>();
+  std::map<long long int, long long int> lookup_table = std::map<long long int, long long int>();
   for (long long int exp = 0; exp < sqrt_ceil; exp++) {
     lookup_table[pow] = exp;
     pow *= 2;
@@ -51,7 +52,7 @@ int count_set_bits(long long int n) {
 }
 
 std::vector<long long int> get_powers(long long int n) {
-  // Get a list of the powers of 2 nulo n.
+  // Get a list of the powers of 2 modulo n.
   std::unordered_set<long long int> pow_set;
   std::vector<long long int> pow_list;
   long long int pow = 1;

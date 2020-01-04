@@ -4,6 +4,7 @@
 // of interest.
 
 int DynamicProgramming::is_sturdy(long long int n) {
+  // Complexity: O(n^2 log n)
   int num_set_bits = count_set_bits(n);
   if (num_set_bits <= 2) {
     return STURDY;
@@ -58,6 +59,7 @@ int DynamicProgramming::is_sturdy(long long int n) {
 }
 
 int DynamicProgramming::swm(long long int n) {
+  // Complexity: O(n^2 log n)
   int num_set_bits = count_set_bits(n);
   if (num_set_bits <= 2) {
     return num_set_bits;
@@ -107,6 +109,7 @@ int DynamicProgramming::swm(long long int n) {
 }
 
 mp::mpz_int DynamicProgramming::msw(long long int n) {
+  // Complexity: O(n^2 log n)
   int num_set_bits = count_set_bits(n);
   if (num_set_bits <= 2) {
     return 1;
@@ -146,6 +149,7 @@ mp::mpz_int DynamicProgramming::msw(long long int n) {
 }
 
 mp::mpz_int DynamicProgramming::mfw(long long int n) {
+  // Complexity: O(n^2 log n)
   int num_set_bits = count_set_bits(n);
   if (num_set_bits <= 2) {
     return mp::mpz_int(0);

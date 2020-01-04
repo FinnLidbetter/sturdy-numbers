@@ -1,9 +1,10 @@
 #include "automaton.h"
 
-// Automaton and binary search implementation of
-// the 4 functions of interest.
+// Basic breadth first search on a graph
+// given by a product automaton.
 
 int Automaton::is_sturdy(long long int n) {
+  // Complexity: O(n log(n))
   int num_set_bits = count_set_bits(n);
   if (num_set_bits <= 2) {
     return STURDY;
@@ -16,7 +17,7 @@ int Automaton::is_sturdy(long long int n) {
 }
 
 int Automaton::swm(long long int n) {
-  // Complexity: O(n log(n) log(log(n)))
+  // Complexity: O(n log(n))
   int num_set_bits = count_set_bits(n);
   if (num_set_bits <= 2) {
     return num_set_bits;
@@ -27,70 +28,57 @@ int Automaton::swm(long long int n) {
     // 2^x + 1 is a multiple of n.
     return 2;
   }
-  // Use a binary search to find the fewest number
-  // of powers of 2 that can be used to represent
-  // a multiple of `n`.
-  int lo = 2;
-  int hi = num_set_bits - 1;
-  int mid, curr_bits;
+  
+  // Perform a breadth-first-search on the
+  // corresponding product automaton.
+  
+  int curr_bits;
   long long int curr_res, next_res;
-  int best = num_set_bits;
-  while (lo <= hi) {
-    mid = lo + (hi - lo) / 2;
-    // Perform a breadth-first-search on the
-    // corresponding product automaton.
-    bool vis[mid + 1][n];
-    std::queue<long long int> res_q;
-    std::queue<long long int> dig_q;
-    for (int i = 0; i <= mid; i++) {
-      for (int j = 0; j < n; j++) {
-        vis[i][j] = false;
-      }
-    }
-    vis[1][1] = true;
-    res_q.push(1);
-    dig_q.push(1);
-    bool found = false;
-    while (res_q.size() > 0) {
-      curr_res = res_q.front();
-      res_q.pop();
-      curr_bits = dig_q.front();
-      dig_q.pop();
-      if (curr_res == 0) {
-        found = true;
-        break;
-      }
-      next_res = curr_res * 2;
-      if (next_res >= n) {
-        next_res -= n;
-      }
-      if (!vis[curr_bits][next_res]) {
-        res_q.push(next_res);
-        dig_q.push(curr_bits);
-        vis[curr_bits][next_res] = true;
-      }
-      next_res++;
-      if (next_res >= n) {
-        next_res -= n;
-      }
-      if (curr_bits < mid && !vis[curr_bits + 1][next_res]) {
-        res_q.push(next_res);
-        dig_q.push(curr_bits + 1);
-        vis[curr_bits + 1][next_res] = true;
-      }
-    }
-    if (found) {
-      best = mid;
-      hi = mid - 1;
-    } else {
-      lo = mid + 1;
+  bool vis[num_set_bits][n];
+  std::queue<long long int> res_q;
+  std::queue<long long int> dig_q;
+  for (int i = 0; i < num_set_bits; i++) {
+    for (int j = 0; j < n; j++) {
+      vis[i][j] = false;
     }
   }
-  return best;
+  vis[1][1] = true;
+  res_q.push(1);
+  dig_q.push(1);
+  while (res_q.size() > 0) {
+    curr_res = res_q.front();
+    res_q.pop();
+    curr_bits = dig_q.front();
+    dig_q.pop();
+    next_res = curr_res * 2;
+    if (next_res >= n) {
+      next_res -= n;
+    }
+    if (!vis[curr_bits][next_res]) {
+      res_q.push(next_res);
+      dig_q.push(curr_bits);
+      vis[curr_bits][next_res] = true;
+    }
+    next_res++;
+    if (next_res >= n) {
+      next_res -= n;
+    }
+    if (curr_bits < num_set_bits - 1 && !vis[curr_bits + 1][next_res]) {
+      res_q.push(next_res);
+      dig_q.push(curr_bits + 1);
+      vis[curr_bits + 1][next_res] = true;
+    }
+  }
+  for (int i = 1; i < num_set_bits; i++) {
+    if (vis[i][0]) {
+      return i;
+    }
+  }
+  return num_set_bits;
 }
 
 mp::mpz_int Automaton::msw(long long int n) {
-  // Complexity: O(n log(n) log(log(n)))
+  // Complexity: O(n log(n))
   int num_set_bits = count_set_bits(n);
   // Get the minimum number of powers of 2 needed.
   int swm = Automaton::swm(n);
@@ -151,7 +139,7 @@ mp::mpz_int Automaton::msw(long long int n) {
     }
   }
   // Re-construct the optimal integer using the
-  // ns stored during the breadth first search.
+  // values stored during the breadth first search.
   curr_res = 0;
   curr_bits = swm;
   mp::mpz_int min_product = 0;
@@ -178,7 +166,7 @@ mp::mpz_int Automaton::mfw(long long int n) {
   // product automaton. (The direct product of the automaton
   // accepting strings with at most (num_set_bits - 1) 1's
   // and the automaton accepting strings corresponding to
-  // multiples of `n`.
+  // multiples of n.
   bool vis[num_set_bits][n];
   long long int prev_res[num_set_bits][n];
   int prev_dig[num_set_bits][n];
