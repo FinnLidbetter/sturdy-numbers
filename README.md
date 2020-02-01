@@ -65,7 +65,7 @@ make
   4. Push your local branch to a branch on GitHub so you can create a pull
      request:
       ```
-      git push --set-upstream origin username-factorialfun-initial-upload
+      git push --set-upstream origin add-bfs-algorithm
       ```
      (If you have already issued this command for a branch, you can leave off
      everything after "push".)
