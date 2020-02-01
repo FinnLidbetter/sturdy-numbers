@@ -219,6 +219,6 @@ mp::mpz_int Bfs01::mfw(long long int n) {
       }
     }
   }
-  return mfw;
+  return mfw / n;
 }
 

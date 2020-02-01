@@ -198,7 +198,7 @@ mp::mpz_int DynamicProgramming::mfw(long long int n) {
   if (mfw == INF) {
     return mp::mpz_int(0);
   }
-  return mfw;
+  return mfw / n;
 }
 
 void DynamicProgramming::fill_tables(bool ***reachable, 
