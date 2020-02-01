@@ -21,21 +21,26 @@ int DynamicProgramming::is_sturdy(long long int n) {
   for (int i = 0; i < ord; i++) {
     pows[i] = pow_list.at(i);
   }
- 
   // reachable[i][j][r] is true iff we can represent
   // j mod n as the sum of i powers of 2 (without 
   // repetition), considering only the first r powers 
   // of 2.
-  bool reachable[num_set_bits][n][ord + 1];
-
-  for (long long int r = 0; r <= ord; r++) {
-    for (int i = 0; i < num_set_bits; i++) {
-      for (long long int j = 0; j < n; j++) {
-        reachable[i][j][r] = false;
+  bool ***reachable;
+  reachable = new bool**[num_set_bits];
+  for (size_t i = 0; i < num_set_bits; i++) {
+    reachable[i] = new bool*[n];
+    for (size_t j = 0; j < n; j++) {
+      reachable[i][j] = new bool[ord + 1];
+      for (size_t k = 0; k < ord + 1; k++) {
+        if (i > 0 || j > 0) {
+          reachable[i][j][k] = false;
+        } else {
+          reachable[i][j][k] = true;
+        }
       }
     }
-    reachable[0][0][r] = true;
   }
+  
   for (long long int r = 1; r <= ord; r++) {
     for (long long int j = 0; j < n; j++) {
       long long int prev_res = j - pows[r-1];
