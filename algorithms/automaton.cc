@@ -248,5 +248,5 @@ mp::mpz_int Automaton::mfw(long long int n) {
       }
     }
   }
-  return mfw;
+  return mfw / n;
 }
