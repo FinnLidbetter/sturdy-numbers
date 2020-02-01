@@ -62,9 +62,9 @@ int main(int argc, char** argv) {
     return 0;
   }
   std::chrono::time_point<std::chrono::high_resolution_clock> end_time = std::chrono::high_resolution_clock::now();
-  std::chrono::microseconds duration = std::chrono::duration_cast<std::chrono::microseconds> (end_time - start_time);
+  std::chrono::milliseconds duration = std::chrono::duration_cast<std::chrono::milliseconds> (end_time - start_time);
   if (print_timing) {
-    std::cout << duration.count() << " microseconds\n";
+    std::cout << duration.count() << " milliseconds\n";
   }
   return 0;
 }
