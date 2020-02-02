@@ -16,6 +16,12 @@ class DynamicProgramming : public Algorithm {
                             int num_set_bits,
                             long long int n,
                             long long int ord);
+    static void clean_up_reachable(bool ***reachable,
+                                   int num_set_bits,
+                                   long long int n);
+    static void clean_up_min_valid(mp::mpz_int ***min_valid,
+                                   int num_set_bits,
+                                   long long int n);
 };
 
 #endif /* DP_H definition */
