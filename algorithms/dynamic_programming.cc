@@ -57,9 +57,11 @@ int DynamicProgramming::is_sturdy(long long int n) {
   }
   for (int i = 2; i < num_set_bits; i++) {
     if (reachable[i][0][ord]) {
+      clean_up_reachable(reachable, num_set_bits, n);
       return NOT_STURDY;
     }
   }
+  clean_up_reachable(reachable, num_set_bits, n);
   return STURDY;
 }
 
@@ -107,9 +109,13 @@ int DynamicProgramming::swm(long long int n) {
   DynamicProgramming::fill_tables(reachable, min_valid, pows, num_set_bits, n, ord);
   for (int i = 2; i < num_set_bits; i++) {
     if (reachable[i][0][ord]) {
+      clean_up_reachable(reachable, num_set_bits, n);
+      clean_up_min_valid(min_valid, num_set_bits, n);
       return i;
     }
   }
+  clean_up_reachable(reachable, num_set_bits, n);
+  clean_up_min_valid(min_valid, num_set_bits, n);
   return num_set_bits;
 }
 
@@ -147,9 +153,13 @@ mp::mpz_int DynamicProgramming::msw(long long int n) {
   DynamicProgramming::fill_tables(reachable, min_valid, pows, num_set_bits, n, ord);
   for (int i = 2; i < num_set_bits; i++) {
     if (reachable[i][0][ord]) {
+      clean_up_reachable(reachable, num_set_bits, n);
+      clean_up_min_valid(min_valid, num_set_bits, n);
       return min_valid[i][0][ord] / n;
     }
   }
+  clean_up_reachable(reachable, num_set_bits, n);
+  clean_up_min_valid(min_valid, num_set_bits, n);
   return mp::mpz_int(1);
 }
 
@@ -195,10 +205,33 @@ mp::mpz_int DynamicProgramming::mfw(long long int n) {
       }
     }
   }
+
+  clean_up_reachable(reachable, num_set_bits, n);
+  clean_up_min_valid(min_valid, num_set_bits, n);
   if (mfw == INF) {
     return mp::mpz_int(0);
   }
   return mfw / n;
+}
+
+void DynamicProgramming::clean_up_reachable(bool ***reachable, int num_set_bits, long long int n) {
+  for (size_t i = 0; i < num_set_bits; i++) {
+    for (size_t j=0; j < n; j++) {
+      delete [] reachable[i][j];
+    }
+    delete [] reachable[i];
+  }
+  delete [] reachable;
+}
+
+void DynamicProgramming::clean_up_min_valid(mp::mpz_int ***min_valid, int num_set_bits, long long int n) {
+  for (size_t i = 0; i < num_set_bits; i++) {
+    for (size_t j=0; j < n; j++) {
+      delete [] min_valid[i][j];
+    }
+    delete [] min_valid[i];
+  }
+  delete [] min_valid;
 }
 
 void DynamicProgramming::fill_tables(bool ***reachable, 
