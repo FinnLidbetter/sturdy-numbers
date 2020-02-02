@@ -153,9 +153,10 @@ mp::mpz_int DynamicProgramming::msw(long long int n) {
   DynamicProgramming::fill_tables(reachable, min_valid, pows, num_set_bits, n, ord);
   for (int i = 2; i < num_set_bits; i++) {
     if (reachable[i][0][ord]) {
+      mp::mpz_int ans = mp::mpz_int(min_valid[i][0][ord] / n);
       clean_up_reachable(reachable, num_set_bits, n);
       clean_up_min_valid(min_valid, num_set_bits, n);
-      return min_valid[i][0][ord] / n;
+      return ans;
     }
   }
   clean_up_reachable(reachable, num_set_bits, n);
